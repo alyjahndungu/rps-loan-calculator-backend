@@ -20,13 +20,13 @@ public class LoanAmortizationUtil {
     ) {
 
         BigDecimal totalInterest = calculateTotalInterest(loanAmount, loanTermDays, interestRate);
-        BigDecimal totalCharges = calculateTotalCharges(loanAmount, loanCharges);
-        BigDecimal outstandingLoanAmount = calculateOutstandingLoanAmount(loanAmount, totalInterest, totalCharges, chargePaymentOption);
-        LocalDate endDate = estimateEndDate(loanTermDays);
-        BigDecimal totalDepositAmount = calculateTotalDepositAmount(outstandingLoanAmount, loanTermDays, paymentFrequency, chargePaymentOption, totalCharges);
-        List<InstallmentT> installments = calculateInstallments(outstandingLoanAmount, loanAmount, loanTermDays, interestRate, penaltyRate, paymentFrequency, gracePeriodDays);
 
-        return new LoanDetails(totalInterest, totalCharges, outstandingLoanAmount, endDate, totalDepositAmount, installments);
+        System.out.println(totalInterest);
+
+        BigDecimal outstandingLoanAmount = calculateOutstandingLoanAmount(loanAmount, totalInterest);
+        LocalDate endDate = estimateEndDate(loanTermDays);
+        List<InstallmentResponse> installments = calculateInstallments(outstandingLoanAmount, loanAmount, loanTermDays, interestRate, paymentFrequency);
+        return new LoanDetails(totalInterest, outstandingLoanAmount, endDate, installments);
     }
 
 
@@ -55,9 +55,7 @@ public class LoanAmortizationUtil {
             BigDecimal loanAmount,
             long loanTermDays,
             BigDecimal interestRate,
-            BigDecimal penaltyRate,
-            String paymentFrequency,
-            int gracePeriodDays
+            String paymentFrequency
     ) {
         List<InstallmentResponse> installments = new ArrayList<>();
         int numInstallments = determineNumberOfInstallments(loanTermDays, paymentFrequency);
@@ -71,8 +69,7 @@ public class LoanAmortizationUtil {
 
             BigDecimal principalPerInstallment = loanAmount.divide(BigDecimal.valueOf(numInstallments), 2, RoundingMode.HALF_EVEN);
             LocalDate dueDate = startDate.plusMonths(i);
-            LocalDate gracePeriodDueDate = dueDate.plusDays(gracePeriodDays);
-            installments.add(new InstallmentResponse(i, installmentAmount, totalInstallmentInterest, BigDecimal.valueOf(0.00), principalPerInstallment, startDate, dueDate, gracePeriodDueDate));
+            installments.add(new InstallmentResponse(i, installmentAmount, totalInstallmentInterest, principalPerInstallment, startDate, dueDate));
         }
         return installments;
     }
