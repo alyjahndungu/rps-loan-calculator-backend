@@ -2,15 +2,11 @@ package com.alyjah.rps_loan_calculator.api;
 
 import com.alyjah.rps_loan_calculator.business.LoanCalculatorService;
 import com.alyjah.rps_loan_calculator.domain.request.LoanEstimateRequest;
-import com.alyjah.rps_loan_calculator.domain.response.LoanDetails;
-import com.alyjah.rps_loan_calculator.domain.response.LoanEstimateResponse;
-import lombok.RequiredArgsConstructor;
+import com.alyjah.rps_loan_calculator.domain.response.LoanResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigDecimal;
 
 @RestController
 @RequestMapping(value = "/api/v1/loan/calculator")
@@ -23,8 +19,8 @@ public class LoanCalculatorController {
     }
 
     @PostMapping
-    public LoanEstimateResponse calculateLoan(@RequestBody LoanEstimateRequest request) {
-        return loanCalculatorService.calculateLoan(request.originatedAmount(), request.interestRate(), request.loanTermDays(), request.paymentFrequency());
+    public LoanResponse calculateLoan(@RequestBody LoanEstimateRequest request) {
+        return loanCalculatorService.calculateLoan(request.originatedAmount(), request.interestRate(), request.loanTermMonths());
     }
 
 }

@@ -1,7 +1,7 @@
 package com.alyjah.rps_loan_calculator.util;
 
-import com.alyjah.rps_loan_calculator.domain.response.InstallmentResponse;
-import com.alyjah.rps_loan_calculator.domain.response.LoanDetails;
+import com.alyjah.rps_loan_calculator.domain.response.Installment;
+import com.alyjah.rps_loan_calculator.domain.response.Loan;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,21 +12,20 @@ import java.util.List;
 public class LoanAmortizationUtil {
     public static final Integer AVG_DAYS_PER_MONTH = 30;
 
-    public static LoanDetails calculateLoanDetails(
+    public static Loan calculateLoanDetails(
             BigDecimal loanAmount,
-            long loanTermDays,
+            long loanTermMonths,
             BigDecimal interestRate,
             String paymentFrequency
     ) {
 
+        long loanTermDays = loanTermMonths * AVG_DAYS_PER_MONTH;
         BigDecimal totalInterest = calculateTotalInterest(loanAmount, loanTermDays, interestRate);
-
-        System.out.println(totalInterest);
-
         BigDecimal outstandingLoanAmount = calculateOutstandingLoanAmount(loanAmount, totalInterest);
+        LocalDate startDate = LocalDate.now();
         LocalDate endDate = estimateEndDate(loanTermDays);
-        List<InstallmentResponse> installments = calculateInstallments(outstandingLoanAmount, loanAmount, loanTermDays, interestRate, paymentFrequency);
-        return new LoanDetails(totalInterest, outstandingLoanAmount, endDate, installments);
+        List<Installment> installments = calculateInstallments(outstandingLoanAmount, loanAmount, loanTermDays, interestRate, paymentFrequency);
+        return new Loan(loanAmount, interestRate, loanTermMonths, totalInterest, outstandingLoanAmount, startDate, endDate, installments);
     }
 
 
@@ -36,49 +35,46 @@ public class LoanAmortizationUtil {
         return percentageInterest.multiply(originatedLoanAmount).multiply(loanTerm).setScale(2, RoundingMode.HALF_EVEN);
     }
 
-    public static BigDecimal calculateOutstandingLoanAmount(
-            BigDecimal loanAmount,
-            BigDecimal totalInterest
-    ) {
+    public static BigDecimal calculateOutstandingLoanAmount(BigDecimal loanAmount, BigDecimal totalInterest) {
         BigDecimal outStandingLoanAmount = loanAmount.add(totalInterest);
-
         return outStandingLoanAmount.setScale(2, RoundingMode.HALF_EVEN);
     }
+
 
     public static LocalDate estimateEndDate(long loanTermDays) {
         return LocalDate.now().plusDays(loanTermDays);
     }
 
 
-    public static List<InstallmentResponse> calculateInstallments(
+    public static List<Installment> calculateInstallments(
             BigDecimal outstandingLoanAmount,
             BigDecimal loanAmount,
             long loanTermDays,
             BigDecimal interestRate,
             String paymentFrequency
     ) {
-        List<InstallmentResponse> installments = new ArrayList<>();
-        int numInstallments = determineNumberOfInstallments(loanTermDays, paymentFrequency);
+        List<Installment> installments = new ArrayList<>();
+        int numInstallments = calculateNumberOfInstallments(loanTermDays, paymentFrequency);
         LocalDate startDate = LocalDate.now();
 
         for (int i = 1; i <= numInstallments; i++) {
             BigDecimal installmentAmount = outstandingLoanAmount.divide(BigDecimal.valueOf(numInstallments), 2, RoundingMode.HALF_EVEN);
-
             BigDecimal percentageInterest = interestRate.divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN);
             BigDecimal totalInstallmentInterest = percentageInterest.multiply(installmentAmount).setScale(2, RoundingMode.HALF_EVEN);
 
             BigDecimal principalPerInstallment = loanAmount.divide(BigDecimal.valueOf(numInstallments), 2, RoundingMode.HALF_EVEN);
             LocalDate dueDate = startDate.plusMonths(i);
-            installments.add(new InstallmentResponse(i, installmentAmount, totalInstallmentInterest, principalPerInstallment, startDate, dueDate));
+            installments.add(new Installment(i, principalPerInstallment, totalInstallmentInterest, installmentAmount, dueDate));
         }
         return installments;
     }
 
 
-    public static int determineNumberOfInstallments(long loanTermDays, String paymentFrequency) {
+    public static int calculateNumberOfInstallments(long loanTermDays, String paymentFrequency) {
         if (paymentFrequency.equals("MONTHLY")) {
             return (int) Math.ceil(loanTermDays / AVG_DAYS_PER_MONTH.doubleValue());
         }
         return 1;
     }
+
 }

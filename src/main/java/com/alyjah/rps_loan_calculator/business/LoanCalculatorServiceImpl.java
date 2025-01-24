@@ -1,8 +1,7 @@
 package com.alyjah.rps_loan_calculator.business;
 
-import com.alyjah.rps_loan_calculator.domain.request.LoanEstimateRequest;
-import com.alyjah.rps_loan_calculator.domain.response.LoanDetails;
-import com.alyjah.rps_loan_calculator.domain.response.LoanEstimateResponse;
+import com.alyjah.rps_loan_calculator.domain.response.Loan;
+import com.alyjah.rps_loan_calculator.domain.response.LoanResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +13,14 @@ import static com.alyjah.rps_loan_calculator.util.LoanAmortizationUtil.calculate
 @RequiredArgsConstructor
 public class LoanCalculatorServiceImpl implements LoanCalculatorService {
     @Override
-    public LoanEstimateResponse calculateLoan(BigDecimal originatedAmount, BigDecimal interestRate, long loanTermDays, String paymentFrequency) {
-        LoanDetails loanDetail =  calculateLoanDetails(
+    public LoanResponse calculateLoan(BigDecimal originatedAmount, BigDecimal interestRate, long loanTermMonths) {
+        Loan loanDetail =  calculateLoanDetails(
                 originatedAmount,
-                loanTermDays,
+                loanTermMonths,
                 interestRate,
-                paymentFrequency
+                "MONTHLY"
         );
 
-        return new LoanEstimateResponse(loanDetail);
+        return new LoanResponse(loanDetail);
     }
 }

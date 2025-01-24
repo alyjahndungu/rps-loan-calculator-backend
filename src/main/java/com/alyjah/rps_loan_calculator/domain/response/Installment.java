@@ -1,24 +1,20 @@
 package com.alyjah.rps_loan_calculator.domain.response;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class InstallmentResponse {
+public class Installment {
     private int installmentNumber;
-    private BigDecimal installmentAmount;
+    private BigDecimal principalAmount;
     private BigDecimal totalInstallmentInterest;
     private BigDecimal outstandingAmount;
-    private LocalDate startDate;
     private LocalDate dueDate;
 
-    public InstallmentResponse(int installmentNumber, BigDecimal installmentAmount, BigDecimal totalInstallmentInterest, BigDecimal outstandingAmount, LocalDate startDate, LocalDate dueDate) {
+    public Installment(int installmentNumber, BigDecimal principalAmount, BigDecimal totalInstallmentInterest, BigDecimal outstandingAmount, LocalDate dueDate) {
         this.installmentNumber = installmentNumber;
-        this.installmentAmount = installmentAmount;
+        this.principalAmount = principalAmount;
         this.totalInstallmentInterest = totalInstallmentInterest;
         this.outstandingAmount = outstandingAmount;
-        this.startDate = startDate;
         this.dueDate = dueDate;
     }
 
@@ -30,12 +26,12 @@ public class InstallmentResponse {
         this.installmentNumber = installmentNumber;
     }
 
-    public BigDecimal getInstallmentAmount() {
-        return installmentAmount;
+    public BigDecimal getPrincipalAmount() {
+        return principalAmount;
     }
 
-    public void setInstallmentAmount(BigDecimal installmentAmount) {
-        this.installmentAmount = installmentAmount;
+    public void setPrincipalAmount(BigDecimal principalAmount) {
+        this.principalAmount = principalAmount;
     }
 
     public BigDecimal getTotalInstallmentInterest() {
@@ -54,13 +50,6 @@ public class InstallmentResponse {
         this.outstandingAmount = outstandingAmount;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
 
     public LocalDate getDueDate() {
         return dueDate;
@@ -74,10 +63,9 @@ public class InstallmentResponse {
     public String toString() {
         return "InstallmentResponse{" +
                 "installmentNumber=" + installmentNumber +
-                ", installmentAmount=" + installmentAmount +
+                ", principalAmount=" + principalAmount +
                 ", totalInstallmentInterest=" + totalInstallmentInterest +
                 ", outstandingAmount=" + outstandingAmount +
-                ", startDate=" + startDate +
                 ", dueDate=" + dueDate +
                 '}';
     }
