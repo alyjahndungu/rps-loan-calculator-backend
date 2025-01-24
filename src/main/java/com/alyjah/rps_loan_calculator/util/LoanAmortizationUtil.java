@@ -23,7 +23,7 @@ public class LoanAmortizationUtil {
         BigDecimal totalInterest = calculateTotalInterest(loanAmount, loanTermDays, interestRate);
         BigDecimal outstandingLoanAmount = calculateOutstandingLoanAmount(loanAmount, totalInterest);
         LocalDate startDate = LocalDate.now();
-        LocalDate endDate = estimateEndDate(loanTermDays);
+        LocalDate endDate = estimateRepaymentEndDate(loanTermDays);
         List<Installment> installments = calculateInstallments(outstandingLoanAmount, loanAmount, loanTermDays, interestRate, paymentFrequency);
         return new Loan(loanAmount, interestRate, loanTermMonths, totalInterest, outstandingLoanAmount, startDate, endDate, installments);
     }
@@ -41,7 +41,7 @@ public class LoanAmortizationUtil {
     }
 
 
-    public static LocalDate estimateEndDate(long loanTermDays) {
+    public static LocalDate estimateRepaymentEndDate(long loanTermDays) {
         return LocalDate.now().plusDays(loanTermDays);
     }
 
