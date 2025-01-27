@@ -1,0 +1,10 @@
+services:
+  loan-calculator:
+    build: .
+    ports:
+      - "2025:2025"
+    environment:
+      SPRING_PROFILES_ACTIVE: development
+    command: >
+      bash -c "git pull && ./mvnw clean package -DskipTests && java -jar target/your-app.jar"
+
