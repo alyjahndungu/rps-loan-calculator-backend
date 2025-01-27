@@ -31,7 +31,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest request) throws BadRequestException {
-
         UserModel authenticatedUser = authService.authenticate(request.username(), request.password());
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticatedUser.username());
         String jwtToken = jwtService.generateToken(userDetails);
