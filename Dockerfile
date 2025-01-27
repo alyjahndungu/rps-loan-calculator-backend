@@ -18,5 +18,5 @@ VOLUME /tmp
 
 # Copy the JAR from the build stage
 COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/rps-loan-calculator.jar"]
+ENTRYPOINT ["java","-jar","/rps-loan-calculator-0.0.1-SNAPSHOT.jar"]
 EXPOSE 8085
