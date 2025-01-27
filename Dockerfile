@@ -1,17 +1,22 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-alpine
-
-# Set the working directory in the container
+# Importing JDK and copying required files
+FROM openjdk:17-jdk-alpine AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src src
 
-# Copy the source code to the container
-COPY . .
+# Copy Maven wrapper
+COPY mvnw .
+COPY .mvn .mvn
 
-# Build the application
+# Set execution permission for the Maven wrapper
+RUN chmod +x ./mvnw
 RUN ./mvnw clean package -DskipTests
 
-# Expose port 2025
-EXPOSE 2025
+# Stage 2: Create the final Docker image using OpenJDK 17 Alpine
+FROM openjdk:17-jdk-alpine
+VOLUME /tmp
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "/app/target/rps-loan-calculator.jar"]
+# Copy the JAR from the build stage
+COPY --from=build /app/target/*.jar app.jar
+ENTRYPOINT ["java","-jar","/rps-loan-calculator.jar"]
+EXPOSE 8080

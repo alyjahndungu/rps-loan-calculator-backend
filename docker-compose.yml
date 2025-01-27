@@ -6,5 +6,5 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: development
     command: >
-      bash -c "git pull && ./mvnw clean package -DskipTests && java -jar target/your-app.jar"
+      bash -c "git pull && ./mvnw clean package -DskipTests && java -jar target/rps-loan-calculator.jar"
 
