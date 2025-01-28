@@ -30,8 +30,9 @@ This project is a Spring Boot application that provides Loan Calculator Operatio
     ```
 
 5. **Access the Application**:
-    - The application will be running on port `2025`.
-    - Open your browser or API testing tool and navigate to `http://localhost:2025`.
+    - The application will be running on port `8085`.
+    - Open your API testing tool and navigate to  `http://localhost:8085` (Development) and `https://rps-loan-calculator-backend.onrender.com` (Production)
+    - 
 
 ## Authentication API Endpoints
 
@@ -49,7 +50,7 @@ This project is a Spring Boot application that provides Loan Calculator Operatio
     ```
 - **Curl Command**:
     ```bash
-    curl --location 'http://localhost:2025/api/v1/auth/login' \
+    curl --location 'http://localhost:8085/api/v1/auth/login' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "username": "johndoe@example.com",
@@ -94,7 +95,7 @@ This project is a Spring Boot application that provides Loan Calculator Operatio
     ```
 - **Curl Command**:
     ```bash
-    curl --location 'http://localhost:2025/api/v1/loan/calculator' \
+    curl --location 'http://localhost:8085/api/v1/loan/calculator' \
     --header 'Content-Type: application/json' \
     --data '{
         "originatedAmount": 3000000,
